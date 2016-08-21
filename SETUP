@@ -1,0 +1,67 @@
+This is a log of how meow.town was set up, just in case we have to do this
+again.
+
+Base system
+-----------
+meow.town is running FreeBSD 10.3 (with zfs) on Digital Ocean in the San
+Francisco 2 region with 512 MB memory and 20 GB SSD.
+
+Configuration files
+-------------------
+See the files/ directory for changed files on the system.
+
+DNS
+---
+A record Name: @ IP: 138.68.54.173
+CNAME record Name: www Hostname: @
+
+Apache
+------
+sudo pkg install apache24
+sudo sysrc apache24_enable=yes
+sudo service apache24 start
+
+cp {files,}/usr/local/etc/apache24/httpd.conf
+
+service apache24 configtest
+sudo service apache24 restart
+
+Make a deployer user and then symlink the release directory to /www
+sudo ln -s /home/deployer/releases/current /www
+
+Adding users
+------------
+sudo mkdir /usr/share/skel/public_html
+cp {files,}/etc/adduser.conf
+cp {files,}/etc/adduser.msg
+
+adduser # then follow prompts
+
+Add their SSH public key to ~/.ssh/authorized_keys:
+mkdir /home/newuser
+mkdir .ssh
+vim .ssh/authorized_keys
+sudo chown -R newuser .ssh
+sudo chmod 700 .ssh
+sudo chmod 644 .ssh/authorized_keys
+
+Force user to make new password on first login:
+sudo pw usermod newusersname -p +0
+
+Add user to all@ mail alias by editing /etc/mail/aliases
+then run newaliases
+
+For the first/main user, add them as an alias for root like:
+root: max
+
+SSH
+---
+Disable password login by uncommenting add the following line to
+/etc/ssh/sshd_config:
+
+ChallengeResponseAuthentication no
+
+Then restart with:
+
+sudo service sshd restart
+
