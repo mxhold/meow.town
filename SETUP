@@ -6,6 +6,16 @@ Base system
 meow.town is running FreeBSD 10.3 (with zfs) on Digital Ocean in the San
 Francisco 2 region with 512 MB memory and 20 GB SSD.
 
+Update
+------
+freebsd-update fetch
+freebsd-update install
+
+Add the following to /etc/crontab:
+@daily                                  root    freebsd-update cron
+
+This will fetch updates and then email root to tell them to install them.
+
 Configuration files
 -------------------
 See the files/ directory for changed files on the system.
