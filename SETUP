@@ -48,15 +48,12 @@ cp {files,}/etc/adduser.msg
 adduser # then follow prompts
 
 Add their SSH public key to ~/.ssh/authorized_keys:
-mkdir /home/newuser
+cd /home/newuser
 mkdir .ssh
 vim .ssh/authorized_keys
 sudo chown -R newuser .ssh
 sudo chmod 700 .ssh
 sudo chmod 644 .ssh/authorized_keys
-
-Force user to make new password on first login:
-sudo pw usermod newusersname -p +0
 
 Add user to all@ mail alias by editing /etc/mail/aliases
 then run newaliases
