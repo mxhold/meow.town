@@ -1,3 +1,5 @@
+HOSTNAME=deployer@meow.town
+DEPLOY_TO=/home/deployer/releases
 release_name := $(shell date +%Y%m%d%H%M)
 
 deploy: cleanup

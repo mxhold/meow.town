@@ -26,5 +26,5 @@ Deploying
 ---------
 Run the following command to deploy:
 
-  HOSTNAME=deployer@138.68.54.173 DEPLOY_TO=/home/deployer/releases make deploy
+    make deploy
 
