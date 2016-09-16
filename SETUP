@@ -45,15 +45,16 @@ sudo mkdir /usr/share/skel/public_html
 cp {files,}/etc/adduser.conf
 cp {files,}/etc/adduser.msg
 
-adduser # then follow prompts
+sudo adduser # then follow prompts
 
-Add their SSH public key to ~/.ssh/authorized_keys:
-cd /home/newuser
-mkdir .ssh
-vim .ssh/authorized_keys
-sudo chown -R newuser .ssh
-sudo chmod 700 .ssh
-sudo chmod 644 .ssh/authorized_keys
+Add their SSH public key to ~/.ssh/authorized_keys (you can now use script/setup_user_ssh.rb to do this):
+
+  cd /home/newuser
+  sudo mkdir .ssh
+  sudo vim .ssh/authorized_keys
+  sudo chown -R newuser .ssh
+  sudo chmod 700 .ssh
+  sudo chmod 644 .ssh/authorized_keys
 
 Add user to all@ mail alias by editing /etc/mail/aliases
 then run newaliases
