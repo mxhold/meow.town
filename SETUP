@@ -39,6 +39,20 @@ sudo service apache24 restart
 Make a deployer user and then symlink the release directory to /www
 sudo ln -s /home/deployer/releases/current /www
 
+Ruby
+----
+Pull down ruby tarball
+./configure
+make
+sudo make install
+
+sudo gem install passenger
+sudo passenger-install-apache2-module
+
+Install chruby and then add this line to /etc/csh.cshrc:
+
+source /usr/local/share/chruby/chruby.sh
+
 Adding users
 ------------
 sudo mkdir /usr/share/skel/public_html
