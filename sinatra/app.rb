@@ -41,6 +41,8 @@ get "/webring" do
     offset = 1
   elsif params[:before]
     offset = -1
+  elsif params.key?(:random)
+    offset = rand(1..1000)
   else
     status 422
     return
