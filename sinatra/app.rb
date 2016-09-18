@@ -37,16 +37,6 @@ get "/pv/:name.png" do
 end
 
 get "/webring" do
-  if params[:after]
-    offset = 1
-  elsif params[:before]
-    offset = -1
-  else
-    status 422
-    return
-  end
-
-  current_user = params[:after] || params[:before]
   webring_users = Dir.glob("/home/*")
   template_index_file = "/usr/share/skel/public_html/index.html"
 
@@ -61,6 +51,16 @@ get "/webring" do
   if params[:random]
     destination_user = webring_users.sample
   else
+    if params[:after]
+      offset = 1
+    elsif params[:before]
+      offset = -1
+    else
+      status 422
+      return
+    end
+
+    current_user = params[:after] || params[:before]
     current_index = webring_users.index(current_user)
     next_index = (current_index + offset) % webring_users.size
     destination_user = webring_users[next_index]
