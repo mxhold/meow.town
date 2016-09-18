@@ -1,0 +1,74 @@
+2016-09-17
+
+  * Installed bash and made it everyone's default shell
+
+    This was necessary because chruby only supports bash and zsh and I thought
+    installing zsh would be a little too opinionated.
+
+    Specific steps taken:
+
+      sudo pkg install bash
+      sudo mount -t fdescfs fdesc /dev/fd
+      echo "fdesc   /dev/fd         fdescfs         rw      0       0" | \
+        sudo tee /etc/fstab
+      for username in max alex shaobing mag json ryan pab genco marklarr ivan
+      do
+        sudo chpass -s /usr/local/bin/bash $username
+      done
+
+  * Installed ruby 2.3.1 and chruby
+
+    chruby is a ruby version switcher, like rvm or rbenv but much simpler.
+
+    See: https://github.com/postmodern/chruby
+
+    If you want to add additional rubies, build them from source and put them
+    in /opt/rubies.
+
+    Specific steps taken:
+
+      cd /home/max/
+      curl -O https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.1.tar.gz
+      tar zxvf ruby-2.3.1.tar.gz
+      cd ruby-2.3.1/
+      sudo mkdir -p /opt/rubies/ruby-2.3.1
+      ./configure --disable-install-doc --prefix=/opt/rubies/ruby-2.3.1
+      make
+      sudo make install
+      sudo mkdir /opt/rubies/ruby-2.3.1/etc/gemrc
+      echo "gem: --no-rdoc --no-ri" | sudo tee /opt/rubies/ruby-2.3.1/etc/gemrc
+
+      cd /home/max/
+      curl -L https://github.com/postmodern/chruby/archive/v0.3.9.tar.gz \
+        --output chruby-0.3.9.tar.gz
+      tar zxvf chruby-0.3.9.tar.gz
+      cd chruby-0.3.9/
+      sudo make install
+
+      echo 'if [ -n "$BASH_VERSION" ] || [ -n "$ZSH_VERSION" ]; then
+        source /usr/local/share/chruby/chruby.sh
+        source /usr/local/share/chruby/auto.sh
+        chruby ruby-2.3
+      fi' | sudo tee -a /etc/profile
+
+  * Installed Phusion Passenger for hosting simple Ruby web apps
+
+    I went with Passenger since we're already using Apache and I didn't want to
+    install NGINX.
+
+    Specific steps taken:
+
+      gem install passenger
+      passenger-install-apache2-module
+      echo 'LoadModule passenger_module /home/max/.gem/ruby/2.3.1/gems/passenger-5.0.30/buildout/apache2/mod_passenger.so
+      <IfModule mod_passenger.c>
+        PassengerRoot /home/max/.gem/ruby/2.3.1/gems/passenger-5.0.30
+        PassengerDefaultRuby /opt/rubies/ruby-2.3.1/bin/ruby
+      </IfModule>' | sudo tee -a /usr/local/etc/apache24/httpd.conf
+      sudo service apache24 restart
+
+    I edited /usr/local/etc/apache24/httpd.conf to add my pageview app.
+
+  * Installed SQLite 3
+
+      sudo pkg install sqlite3
