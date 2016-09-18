@@ -15,6 +15,10 @@
       do
         sudo chpass -s /usr/local/bin/bash $username
       done
+      sudo sed -i '' 's!defaultshell=.*!defaultshell=/usr/local/bin/bash!' \
+        /etc/adduser.conf
+
+
 
   * Installed ruby 2.3.1 and chruby
 
