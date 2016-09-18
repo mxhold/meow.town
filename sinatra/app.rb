@@ -41,8 +41,6 @@ get "/webring" do
     offset = 1
   elsif params[:before]
     offset = -1
-  elsif params.key?(:random)
-    offset = rand(1..1000)
   else
     status 422
     return
@@ -59,8 +57,14 @@ get "/webring" do
   end.map do |home|
     File.basename(home)
   end
-  current_index = webring_users.index(current_user)
-  next_index = (current_index + offset) % webring_users.size
 
-  redirect "http://meow.town/~#{webring_users[next_index]}"
+  if params[:random]
+    destination_user = webring_users.sample
+  else
+    current_index = webring_users.index(current_user)
+    next_index = (current_index + offset) % webring_users.size
+    destination_user = webring_users[next_index]
+  end
+
+  redirect "http://meow.town/~#{destination_user}"
 end
