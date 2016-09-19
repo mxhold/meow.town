@@ -48,7 +48,7 @@ get "/webring" do
     File.basename(home)
   end
 
-  if params[:random]
+  if params.key?("random")
     destination_user = webring_users.sample
   else
     if params[:after]
